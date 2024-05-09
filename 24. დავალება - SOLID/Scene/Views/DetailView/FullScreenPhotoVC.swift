@@ -9,8 +9,6 @@ import UIKit
 
 class FullScreenPhotoVC: UIViewController {
     // MARK: - Properties
-    private var dataSource: DataSource!
-    private var snapShot = DataSourceSnapShot()
     private let itemsPerRow: CGFloat = 1
     private let viewModel: FullScreenPhotoViewModel
     
@@ -55,7 +53,7 @@ class FullScreenPhotoVC: UIViewController {
         layout.itemSize = CGSize(width: view.frame.width, height: view.frame.height)
         layout.minimumLineSpacing = 0
         
-        photosCollectionView.dataSource = dataSource
+        photosCollectionView.dataSource = viewModel.dataSource
         photosCollectionView.collectionViewLayout = layout
         photosCollectionView.isPagingEnabled = true
         
@@ -68,7 +66,7 @@ class FullScreenPhotoVC: UIViewController {
     }
     
     private func configureCollectionViewDataSource() {
-        dataSource = DataSource(collectionView: photosCollectionView, cellProvider: { (collectionView, indexPath, itemIdentifier) -> MainVCCollectionViewCell in
+        viewModel.dataSource = DataSource(collectionView: photosCollectionView, cellProvider: { (collectionView, indexPath, itemIdentifier) -> MainVCCollectionViewCell in
             let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: MainVCCollectionViewCell.cellIdentifier, for: indexPath) as! MainVCCollectionViewCell
             ConfigureCellMethod.shared.configure(cell: mainCell, at: indexPath)
             return mainCell
@@ -80,16 +78,10 @@ class FullScreenPhotoVC: UIViewController {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 self.photosCollectionView.reloadData()
-                self.applySnapshot(photos: ConfigureCellMethod.shared.photoModel ?? [])
+                viewModel.applySnapshot(photos: ConfigureCellMethod.shared.photoModel ?? [])
             }
         }
     }
     
-    private func applySnapshot(photos: [PhotoModel]) {
-        snapShot = DataSourceSnapShot()
-        snapShot.appendSections([.grid])
-        snapShot.appendItems(photos, toSection: .grid)
-        dataSource.apply(snapShot, animatingDifferences: false)
-    }
-    
 }
+

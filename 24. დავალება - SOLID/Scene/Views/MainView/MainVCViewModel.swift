@@ -10,6 +10,8 @@ import Foundation
 
 final class PhotoViewModel {
     // MARK: - Properties
+    var dataSource: DataSource!
+    var snapShot = DataSourceSnapShot()
     var networkingService = Variable.networkingService
     var urlString = Variable.urlString
     
@@ -25,6 +27,14 @@ final class PhotoViewModel {
             }
         }
     }
+    
+    func applySnapshot(photos: [PhotoModel]) {
+        snapShot = DataSourceSnapShot()
+        snapShot.appendSections([.grid])
+        snapShot.appendItems(photos, toSection: .grid)
+        dataSource.apply(snapShot, animatingDifferences: false)
+    }
+    
     
 }
 

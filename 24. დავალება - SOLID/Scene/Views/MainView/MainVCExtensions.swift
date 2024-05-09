@@ -24,7 +24,7 @@ extension MainVC: UICollectionViewDelegateFlowLayout {
 
 extension MainVC: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let photo = dataSource.itemIdentifier(for: indexPath) else { return }
+        guard let photo = photoViewModel.dataSource.itemIdentifier(for: indexPath) else { return }
         print(photo.id ?? "")
         navigateToFullImageVC(with: photo)
         

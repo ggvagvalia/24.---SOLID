@@ -10,9 +10,7 @@ import UIKit
 class MainVC: UIViewController {
     
     // MARK: - Properties
-    var dataSource: DataSource!
-    private var snapShot = DataSourceSnapShot()
-    private let photoViewModel: PhotoViewModel
+    let photoViewModel: PhotoViewModel
     let itemsPerRow: CGFloat = 3
     let sectionInsets = UIEdgeInsets(top: 1.0, left: 1.0, bottom: 1.0, right: 1.0)
     private let photosCollectionView: CustomCollectionView = {
@@ -45,7 +43,7 @@ class MainVC: UIViewController {
         navigationController?.navigationBar.titleTextAttributes = [.font: UIFont.systemFont(ofSize: 32.0)]
         view.addSubview(photosCollectionView)
         photosCollectionView.delegate = self
-        photosCollectionView.dataSource = dataSource
+        photosCollectionView.dataSource = photoViewModel.dataSource
         
         NSLayoutConstraint.activate([
             photosCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 0),
@@ -56,7 +54,7 @@ class MainVC: UIViewController {
     }
     
     private func configureCollectionViewDataSource() {
-        dataSource = DataSource(collectionView: photosCollectionView, cellProvider: { (collectionView, indexPath, itemIdentifier) -> MainVCCollectionViewCell in
+        photoViewModel.dataSource = DataSource(collectionView: photosCollectionView, cellProvider: { (collectionView, indexPath, itemIdentifier) -> MainVCCollectionViewCell in
             let mainCell = collectionView.dequeueReusableCell(withReuseIdentifier: MainVCCollectionViewCell.cellIdentifier, for: indexPath) as! MainVCCollectionViewCell
             ConfigureCellMethod.shared.configure(cell: mainCell, at: indexPath)
             return mainCell
@@ -67,21 +65,15 @@ class MainVC: UIViewController {
         ConfigureCellMethod.shared.photosUpdated = { [weak self] in
             DispatchQueue.main.async { [weak self] in
                 self?.photosCollectionView.reloadData()
-                self?.applySnapshot(photos: ConfigureCellMethod.shared.photoModel ?? [])
+                self?.photoViewModel.applySnapshot(photos: ConfigureCellMethod.shared.photoModel ?? [])
             }
         }
     }
     
-    private func applySnapshot(photos: [PhotoModel]) {
-        snapShot = DataSourceSnapShot()
-        snapShot.appendSections([.grid])
-        snapShot.appendItems(photos, toSection: .grid)
-        dataSource.apply(snapShot, animatingDifferences: false)
-    }
     
     
     func navigateToFullImageVC(with photo: PhotoModel) {
-        let fullScreenPhotoViewModel = FullScreenPhotoViewModel(selectedPhoto: photo, allPhotos: dataSource.snapshot().itemIdentifiers)
+        let fullScreenPhotoViewModel = FullScreenPhotoViewModel(selectedPhoto: photo, allPhotos: photoViewModel.dataSource.snapshot().itemIdentifiers)
         let detailsVC = FullScreenPhotoVC(viewModel: fullScreenPhotoViewModel)
         navigationController?.pushViewController(detailsVC, animated: true)
     }

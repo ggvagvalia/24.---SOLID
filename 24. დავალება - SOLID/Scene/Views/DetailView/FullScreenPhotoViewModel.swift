@@ -9,6 +9,8 @@ import Foundation
 
 class FullScreenPhotoViewModel {
     
+    var dataSource: DataSource!
+    var snapShot = DataSourceSnapShot()
     private var photos: [PhotoModel]
     var currentIndex: Int = 0
     var networkingService = Variable.networkingService
@@ -40,4 +42,12 @@ class FullScreenPhotoViewModel {
             }
         }
     }
+    
+    func applySnapshot(photos: [PhotoModel]) {
+        snapShot = DataSourceSnapShot()
+        snapShot.appendSections([.grid])
+        snapShot.appendItems(photos, toSection: .grid)
+        dataSource.apply(snapShot, animatingDifferences: false)
+    }
+    
 }
