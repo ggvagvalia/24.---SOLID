@@ -1,0 +1,15 @@
+{
+  "originHash" : "73024efa7cd8debbb3aab09aeef88590ff211048e3e10c99e33d0bf49eeef493",
+  "pins" : [
+    {
+      "identity" : "networkingservice",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ggvagvalia/NetworkingService.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "9e39acbcf1af7c8604927ca7531acaa1f8f1534a"
+      }
+    }
+  ],
+  "version" : 3
+}
