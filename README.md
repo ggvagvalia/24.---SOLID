@@ -1,4 +1,4 @@
-# Photo Gallery App
+# Photo Gallery App 
 
 This project is a Swift-based application that allows users to browse and view photos from the Unsplash API in full screen. The app is built using the MVVM architecture, adheres to SOLID principles, and implements a Diffable DataSource for efficient data handling.
 
